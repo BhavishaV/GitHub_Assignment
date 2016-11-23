@@ -23,16 +23,16 @@ public class test_Login {
 		
 		//if u want to use chrome
 		System.setProperty("webdriver.chrome.driver", "C:\\Selenium\\chromedriver.exe");
+		
 		extent = new ExtentReports();
+		
 		try{
 		extent.init("D:\\githublogin.html", true);
 		}
 		catch(Exception e){
 			JOptionPane.showMessageDialog(null, "HTML report cannont be created @ D drive");
 		}
-	
-		//extent.log(LogStatus.INFO, "Test for valid Login started");
-		
+			
 		ValidLigin("be.bhavisha01@gmail.com","Password@21","Valid Login");
 		inValidLigin("be.bhavisha01@gmail.com","zzzzz","InValid Login");
 	
@@ -42,12 +42,23 @@ public class test_Login {
 		String expTitle = "GitHub";
 		String Log="";
 		
+		WebDriver wd=null;
+		
+		//check driver
 		try{
-		WebDriver wd=new ChromeDriver();
+				wd=new ChromeDriver();
+		}
+		catch(Exception e){
+			JOptionPane.showMessageDialog(null, "Issue with chrome driver. Please place chrome driver exe @ C:\\Selenium\\chromedriver.exe");
+		}
+		
 		wd.get("http://github.com/");
 		wd.manage().window().maximize();
 		
+				
 		extent.startTest(testType);
+		
+		try{
 		wd.findElement(By.xpath("//a[@class='btn site-header-actions-btn mr-1']")).click();
 		
 		wd.findElement(By.xpath("//*[@id='login_field']")).clear();
@@ -58,6 +69,12 @@ public class test_Login {
 		
 		wd.findElement(By.xpath("//input[@name='commit']")).click();
 		wd.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		}
+		catch(Exception e)
+		{
+			
+			extent.log(LogStatus.FAIL, e.toString());
+		}
 		String actTitle = wd.getTitle();
 		
 		if (actTitle.equals(expTitle))
@@ -71,21 +88,32 @@ public class test_Login {
 		}
 		System.out.println("End of Login");
 		wd.close();
-		}
-		catch(Exception e){
-			JOptionPane.showMessageDialog(null, "Issue with chrome driver. Please place chrome driver exe @ C:\\Selenium\\chromedriver.exe");
-		}
+		
 		
 	}
 	
 	public static void inValidLigin(String UserName, String Password, String testType){
 		String expErrorMessage = "Incorrect username or password.";
 		String Log="";
-		try{		
-		WebDriver wd=new ChromeDriver();
+		String actErrorMessage="";
+		
+		WebDriver wd=null;
+		
+		//check driver
+		try{
+				wd=new ChromeDriver();
+		}
+		catch(Exception e){
+			JOptionPane.showMessageDialog(null, "Issue with chrome driver. Please place chrome driver exe @ C:\\Selenium\\chromedriver.exe");
+		}
+		
 		wd.get("http://github.com/");
 		wd.manage().window().maximize();
+		
+		
 		extent.startTest(testType);
+		
+		try{
 		wd.findElement(By.xpath("//a[@class='btn site-header-actions-btn mr-1']")).click();
 		
 		wd.findElement(By.xpath("//*[@id='login_field']")).clear();
@@ -97,7 +125,15 @@ public class test_Login {
 		wd.findElement(By.xpath("//input[@name='commit']")).click();
 		wd.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 		
-		String actErrorMessage = wd.findElement(By.xpath("//*[@id='js-flash-container']/div")).getText();
+		actErrorMessage = wd.findElement(By.xpath("//*[@id='js-flash-container']/div")).getText();
+		}
+		catch(Exception e)
+		{
+			
+			extent.log(LogStatus.FAIL, e.toString());
+		}
+		
+		
 		System.out.println(actErrorMessage);
 		if (actErrorMessage.equals(expErrorMessage))
 		{
@@ -110,11 +146,9 @@ public class test_Login {
 		}
 		System.out.println("End of Login");
 		wd.close();
-		}
 		
-		catch(Exception e){
-			JOptionPane.showMessageDialog(null, "Issue with chrome driver. Please place chrome driver exe @ C:\\Selenium\\chromedriver.exe");
-		}
+		
+		
 	}
 	
 
